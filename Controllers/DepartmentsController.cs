@@ -14,9 +14,11 @@ namespace ASPNETCore5Demo.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly ContosoUniversityContext _context;
+        private readonly ContosoUniversityContextProcedures sp;
 
-        public DepartmentsController(ContosoUniversityContext context)
+        public DepartmentsController(ContosoUniversityContext context, ContosoUniversityContextProcedures sp)
         {
+            this.sp = sp;
             _context = context;
         }
 
@@ -43,6 +45,12 @@ namespace ASPNETCore5Demo.Controllers
 
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="department"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDepartment(int id, Department department)
         {
@@ -51,11 +59,15 @@ namespace ASPNETCore5Demo.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(department).State = EntityState.Modified;
+
+
+            //_context.Entry(department).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                var test = _context.Department.Find(id);
+                await sp.Department_Update(id, department.Name, department.Budget, test.StartDate, test.InstructorId, test.RowVersion, null);
+                //await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -74,16 +86,28 @@ namespace ASPNETCore5Demo.Controllers
 
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="department"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
-            _context.Department.Add(department);
-            await _context.SaveChangesAsync();
+
+            await sp.Department_Insert(department.Name, department.Budget, department.StartDate, department.InstructorId, null);
+            //_context.Department.Add(department);
+            //await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
         }
 
         // DELETE: api/Departments/5
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
@@ -92,9 +116,9 @@ namespace ASPNETCore5Demo.Controllers
             {
                 return NotFound();
             }
-
-            _context.Department.Remove(department);
-            await _context.SaveChangesAsync();
+            await sp.Department_Delete(id, department.RowVersion, null);
+            //_context.Department.Remove(department);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
         }
