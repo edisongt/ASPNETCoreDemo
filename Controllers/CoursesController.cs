@@ -113,7 +113,21 @@ namespace ASPNETCore5Demo.Controllers
             //    .First(p => p.DepartmentId == id).Course.ToList();
 
             return _context.Department.Where(p => p.DepartmentId == id).Include(p => p.Course)
-             .SelectMany(x=> x.Course).ToList();
+             .SelectMany(x => x.Course).ToList();
+        }
+
+        [HttpGet("vwCourseStudentCount")]
+        public ActionResult<IEnumerable<VwCourseStudentCount>> GetCourseStudentCount()
+        {
+            return _context.VwCourseStudentCount;
+        }
+
+
+
+        [HttpGet("vwCourseStudents")]
+        public ActionResult<IEnumerable<VwCourseStudents>> GetVwCourseStudents()
+        {
+            return _context.VwCourseStudents;
         }
 
         private bool CourseExists(int id)
