@@ -24,7 +24,7 @@ namespace ASPNETCore5Demo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Person>>> GetPerson()
         {
-            return await _context.Person.ToListAsync();
+            return await _context.Person.Where(x=> x.IsDeleted == false).ToListAsync();
         }
 
         // GET: api/People/5
@@ -93,7 +93,7 @@ namespace ASPNETCore5Demo.Controllers
                 return NotFound();
             }
 
-            _context.Person.Remove(person);
+            person.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return NoContent();

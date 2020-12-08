@@ -26,7 +26,7 @@ namespace ASPNETCore5Demo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartment()
         {
-            return await _context.Department.ToListAsync();
+            return await _context.Department.Where(x=> x.IsDeleted == false).ToListAsync();
         }
 
         // GET: api/Departments/5
@@ -116,9 +116,9 @@ namespace ASPNETCore5Demo.Controllers
             {
                 return NotFound();
             }
-            await sp.Department_Delete(id, department.RowVersion, null);
-            //_context.Department.Remove(department);
-            //await _context.SaveChangesAsync();
+            //await sp.Department_Delete(id, department.RowVersion, null);
+            department.IsDeleted = true;
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
