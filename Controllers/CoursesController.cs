@@ -130,6 +130,22 @@ namespace ASPNETCore5Demo.Controllers
             return _context.VwCourseStudents;
         }
 
+        [HttpGet("vwDepartmentCourseCount")]
+        public ActionResult<IEnumerable<VwDepartmentCourseCount>> GetvwDepartmentCourseCount()
+        {
+            try
+            {
+                var result = _context.VwDepartmentCourseCount.FromSqlInterpolated($"select * from vwDepartmentCourseCount").ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
+        }
+
         private bool CourseExists(int id)
         {
             return _context.Course.Any(e => e.CourseId == id);
