@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASPNETCore5Demo.Helpers;
 using ASPNETCore5Demo.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace ASPNETCore5Demo
 {
@@ -31,8 +33,9 @@ namespace ASPNETCore5Demo
             // using Microsoft.EntityFrameworkCore;
             services.AddDbContext<ContosoUniversityContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddScoped<ContosoUniversityContextProcedures>();
+            services.AddSingleton<JwtHelpers>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -45,11 +48,14 @@ namespace ASPNETCore5Demo
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
+
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ASPNETCore5Demo v1"));
             }
 
+
+            app.UseExceptionHandler("/error");
             app.UseHttpsRedirection();
 
             app.UseRouting();

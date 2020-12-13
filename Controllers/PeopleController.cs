@@ -29,6 +29,9 @@ namespace ASPNETCore5Demo.Controllers
 
         // GET: api/People/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _context.Person.FindAsync(id);
@@ -44,6 +47,10 @@ namespace ASPNETCore5Demo.Controllers
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> PutPerson(int id, Person person)
         {
             if (id != person.Id)
@@ -75,6 +82,8 @@ namespace ASPNETCore5Demo.Controllers
         // POST: api/People
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
             _context.Person.Add(person);
@@ -85,6 +94,9 @@ namespace ASPNETCore5Demo.Controllers
 
         // DELETE: api/People/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> DeletePerson(int id)
         {
             var person = await _context.Person.FindAsync(id);

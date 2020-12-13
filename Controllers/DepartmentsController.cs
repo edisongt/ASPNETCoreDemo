@@ -109,6 +109,9 @@ namespace ASPNETCore5Demo.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             var department = await _context.Department.FindAsync(id);
